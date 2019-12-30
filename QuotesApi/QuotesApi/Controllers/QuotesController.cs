@@ -29,5 +29,17 @@ namespace QuotesApi.Controllers
         {
             _quotes.Add(quote);
         }
+
+        [HttpPut("{id}")]
+        public void Put(int id,[FromBody] Quote quote)
+        {
+            _quotes[id] = quote;
+        }
+
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+            _quotes.RemoveAt(id);
+        }
     }
 }
