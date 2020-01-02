@@ -25,18 +25,19 @@ namespace QuotesApi
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        [Obsolete]
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddDbContext<QuotesDbContext>(option=>option.UseSqlServer(@"Data Source = (localdb)\MSSQLLocalDB; Initial Catalog=QuotesDB"));
+            services.AddDbContext<QuotesDbContext>(option=>option.UseSqlServer(@"Data Source = (localdb)\MSSQLLocalDB;Initial Catalog=QuotesDB;"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, QuotesDbContext quotesDbContext)
         {
+            quotesDbContext.Database.EnsureCreated();
 
-          
+            
 
             if (env.IsDevelopment())
             {
@@ -54,8 +55,7 @@ namespace QuotesApi
                 endpoints.MapControllers();
             });
 
-            quotesDbContext.Database.EnsureCreated();
-          
+            
         }
     }
 }

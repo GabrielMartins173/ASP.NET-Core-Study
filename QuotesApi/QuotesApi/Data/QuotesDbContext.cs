@@ -9,7 +9,8 @@ namespace QuotesApi.Data
 {
     public class QuotesDbContext : DbContext
     {
-        public QuotesDbContext(DbContextOptions<QuotesDbContext> options) : base(options)
+
+        public QuotesDbContext(DbContextOptions<QuotesDbContext>options):base(options)
         {
 
         }
