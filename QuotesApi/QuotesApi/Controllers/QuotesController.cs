@@ -29,9 +29,10 @@ namespace QuotesApi.Controllers
 
         // GET: api/Quotes/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public Quote Get(int id)
         {
-            return "value";
+           var quote = _quotesDbContext.Quotes.Find(id);
+            return quote;
         }
 
         // POST: api/Quotes
