@@ -37,20 +37,30 @@ namespace QuotesApi.Controllers
 
         // POST: api/Quotes
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Quote quote)
         {
+            _quotesDbContext.Quotes.Add(quote);
+            _quotesDbContext.SaveChanges(); //this method saves the modifications on our database. 
         }
 
         // PUT: api/Quotes/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] Quote quote)
         {
+            var entity = _quotesDbContext.Quotes.Find(id); //search at the database for the object that we need to modify. 
+            entity.Title = quote.Title;
+            entity.Author = quote.Author;
+            entity.Description = quote.Description;
+            _quotesDbContext.SaveChanges();
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+           var quote = _quotesDbContext.Quotes.Find(id);
+            _quotesDbContext.Quotes.Remove(quote);
+            _quotesDbContext.SaveChanges();
         }
     }
 }
