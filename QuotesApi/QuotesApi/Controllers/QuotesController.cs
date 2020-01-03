@@ -22,6 +22,7 @@ namespace QuotesApi.Controllers
         }
         // GET: api/Quotes
         [HttpGet]
+        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Client)]
         public IActionResult Get(string sort)
         {
 
