@@ -34,11 +34,11 @@ namespace QuotesApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, QuotesDbContext quotesDbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            quotesDbContext.Database.EnsureCreated();
+            //quotesDbContext.Database.EnsureCreated();
 
-            
+            //quotesDbContext.Database.Migrate();            
 
             if (env.IsDevelopment())
             {
