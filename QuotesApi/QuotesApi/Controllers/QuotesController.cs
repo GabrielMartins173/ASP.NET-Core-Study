@@ -44,6 +44,22 @@ namespace QuotesApi.Controllers
 
         }
 
+
+
+        [HttpGet]
+        [Route("[action]")]
+        public IActionResult PagingQuote(int? pageNumber, int? pageSize)
+        {
+            var quotes = _quotesDbContext.Quotes;
+
+            var currentPageNumber = pageNumber ?? 1;
+            var currentPageSize = pageSize ?? 5;
+
+            return Ok(quotes.Skip((currentPageNumber - 1)*currentPageSize).Take(currentPageSize));
+        }
+
+
+
         // GET: api/Quotes/5
         [HttpGet("{id}", Name = "Get")]
         public IActionResult Get(int id)
