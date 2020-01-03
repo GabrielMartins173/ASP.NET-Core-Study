@@ -22,13 +22,25 @@ namespace QuotesApi.Controllers
         }
         // GET: api/Quotes
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(string sort)
         {
-            //return _quotesDbContext.Quotes;
-             return Ok(_quotesDbContext.Quotes); // this way will return the list with all the quotes and the status 200 ok.
-            // we have the other status codes to return too. For example if we need to return NotFound (404) or BadRequest (400).
 
-            //return StatusCode(StatusCodes.Status200OK); // In this way we can return any type of status code. By number or we can use inside the parenthesis StatusCodes. and the IDE will list to us the codes. 
+            IQueryable<Quote> quotes;
+
+            switch (sort)
+            {
+                case "desc":
+                    quotes = _quotesDbContext.Quotes.OrderByDescending(q => q.CreatedAt);
+                    break;
+                case "asc":
+                    quotes = _quotesDbContext.Quotes.OrderBy(q => q.CreatedAt);
+                    break;
+                default:
+                    quotes = _quotesDbContext.Quotes;
+                    break;
+            }
+
+            return Ok(quotes);
 
         }
 
@@ -36,9 +48,9 @@ namespace QuotesApi.Controllers
         [HttpGet("{id}", Name = "Get")]
         public IActionResult Get(int id)
         {
-           var quote = _quotesDbContext.Quotes.Find(id);
+            var quote = _quotesDbContext.Quotes.Find(id);
 
-            if(quote == null)
+            if (quote == null)
             {
                 return NotFound("No record found ...");
             }
@@ -46,8 +58,15 @@ namespace QuotesApi.Controllers
             {
                 return Ok(quote);
             }
-         
+
         }
+
+        ////api/quotes/test/1
+        //[HttpGet("[action]/{id}")]
+        //public int Test(int id)
+        //{
+        //    return id;
+        //}
 
         // POST: api/Quotes
         [HttpPost]
@@ -64,7 +83,7 @@ namespace QuotesApi.Controllers
         {
             var entity = _quotesDbContext.Quotes.Find(id); //search at the database for the object that we need to modify. 
 
-            if(entity == null)
+            if (entity == null)
             {
                 return NotFound("No record found against this id ...");
             }
@@ -78,16 +97,16 @@ namespace QuotesApi.Controllers
                 _quotesDbContext.SaveChanges();
                 return Ok("Record updated successfully...");
             }
-  
+
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-           var quote = _quotesDbContext.Quotes.Find(id);
+            var quote = _quotesDbContext.Quotes.Find(id);
 
-            if(quote == null)
+            if (quote == null)
             {
                 return NotFound("No record found against this id ...");
             }
@@ -97,7 +116,7 @@ namespace QuotesApi.Controllers
                 _quotesDbContext.SaveChanges();
                 return Ok("Quote deleted ...");
             }
-            
+
         }
     }
 }
