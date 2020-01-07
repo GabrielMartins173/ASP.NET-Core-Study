@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using QuotesApi.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace QuotesApi
 {
@@ -31,6 +32,18 @@ namespace QuotesApi
             services.AddDbContext<QuotesDbContext>(option=>option.UseSqlServer(@"Data Source = (localdb)\MSSQLLocalDB;Initial Catalog=QuotesDB;"));
             services.AddMvc().AddXmlSerializerFormatters();
             services.AddResponseCaching();
+
+            // 1. Add Authentication Services
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "https://dev-0w6z3uhs.auth0.com/";
+                options.Audience = "https://localhost:44353/";
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +70,11 @@ namespace QuotesApi
             });
 
             app.UseResponseCaching();
-            
-        }
+
+            // 2. Enable authentication middleware
+            app.UseAuthentication();
+
+        
+    }
     }
 }

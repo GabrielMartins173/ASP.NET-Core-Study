@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuotesApi.Data;
@@ -11,6 +12,7 @@ namespace QuotesApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorauize]
     public class QuotesController : ControllerBase
     {
 
