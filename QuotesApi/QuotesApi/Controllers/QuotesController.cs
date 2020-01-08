@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +13,7 @@ namespace QuotesApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorauize]
+    [Authorize]
     public class QuotesController : ControllerBase
     {
 
@@ -108,6 +109,8 @@ namespace QuotesApi.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Quote quote)
         {
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            quote.UserId = userId;
             _quotesDbContext.Quotes.Add(quote);
             _quotesDbContext.SaveChanges(); //this method saves the modifications on our database. 
             return StatusCode(StatusCodes.Status201Created);
