@@ -26,6 +26,7 @@ namespace QuotesApi.Controllers
         // GET: api/Quotes
         [HttpGet]
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Client)]
+        [AllowAnonymous]
         public IActionResult Get(string sort)
         {
 
@@ -80,6 +81,13 @@ namespace QuotesApi.Controllers
           
         }
 
+        [HttpGet("[action]")]
+        public IActionResult MyQuote()
+        {
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var quotes = _quotesDbContext.Quotes.Where(q=>q.UserId==userId);
+            return Ok(quotes);
+        }
 
         // GET: api/Quotes/5
         [HttpGet("{id}", Name = "Get")]
@@ -120,11 +128,17 @@ namespace QuotesApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Quote quote)
         {
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
             var entity = _quotesDbContext.Quotes.Find(id); //search at the database for the object that we need to modify. 
 
             if (entity == null)
             {
                 return NotFound("No record found against this id ...");
+            }
+
+            if (userId!=entity.UserId){
+                return BadRequest("Sorry you can't update this record ...");
             }
             else
             {
@@ -143,11 +157,17 @@ namespace QuotesApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
             var quote = _quotesDbContext.Quotes.Find(id);
 
             if (quote == null)
             {
                 return NotFound("No record found against this id ...");
+            }
+            if (userId != quote.UserId)
+            {
+                return BadRequest("Sorry you can't delete this record ...");
             }
             else
             {

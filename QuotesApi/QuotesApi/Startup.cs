@@ -47,7 +47,7 @@ namespace QuotesApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, QuotesDbContext quotesDbContext)
         {
             //quotesDbContext.Database.EnsureCreated();
 
@@ -74,7 +74,8 @@ namespace QuotesApi
             // 2. Enable authentication middleware
             app.UseAuthentication();
 
+            quotesDbContext.Database.EnsureCreated();
         
-    }
+         }
     }
 }
